@@ -1,22 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract TestToken is Initializable, ERC20Upgradeable, OwnableUpgradeable {
+contract TestToken is ERC20, Ownable {
     event MintedToken(address indexed to, uint256 amount);
 
     uint8 public _decimals;
 
-    function initialize(
+    constructor(
         string memory _name,
         string memory _symbol,
         uint8 _ddecimals
-    ) public initializer {
-        __ERC20_init(_name, _symbol);
-        __Ownable_init();
+    ) ERC20(_name, _symbol) {
         _decimals = _ddecimals;
     }
     

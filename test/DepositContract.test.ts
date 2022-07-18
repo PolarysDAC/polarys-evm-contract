@@ -41,20 +41,12 @@ describe('DepositContract-Test', () => {
     console.log('===================Deploying Contract=====================')
 
     const tokenFactory = await ethers.getContractFactory("TestToken")
-    testToken = (await upgrades.deployProxy(
-        tokenFactory, 
-        [
-            "TestCoin",
-            "TTC",
-            18
-        ]
-    )
-    ) as TestToken
+    testToken = (await tokenFactory.deploy("TestCoin", "TTC", 18)) as TestToken
     await testToken.deployed()
     console.log('TestToken deployed: ', testToken.address)
 
     const contractFactory = await ethers.getContractFactory("DepositContract")
-    depositContract = (await upgrades.deployProxy(contractFactory, [testToken.address])) as DepositContract
+    depositContract = (await contractFactory.deploy(testToken.address)) as DepositContract
     await depositContract.deployed()
     console.log('DepositContract deployed: ', depositContract.address)
 

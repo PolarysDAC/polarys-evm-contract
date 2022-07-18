@@ -2,16 +2,15 @@
 
 pragma solidity ^0.8.13;
 
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
-contract DepositContract is Initializable, AccessControlUpgradeable, OwnableUpgradeable, EIP712Upgradeable {
-    using SafeERC20Upgradeable for IERC20Upgradeable;
+contract DepositContract is AccessControl, Ownable, EIP712 {
+    using SafeERC20 for IERC20;
     
     event DepositedToken(address indexed tokenAddress, address indexed sender, uint256 quantity, uint256 amount, uint256 nonce);
     event WithdrawedToken(address indexed tokenAddress, address indexed receipient, uint256 amount);
@@ -24,15 +23,10 @@ contract DepositContract is Initializable, AccessControlUpgradeable, OwnableUpgr
     address public acceptToken;
     uint256 private _nonce;
 
-    function initialize(
-        address _acceptToken
-    ) public initializer {
-        __AccessControl_init();
-        __Ownable_init();
-        __EIP712_init("DepositContract", "1.0.0");
+    constructor(address _acceptToken) EIP712("DepositContract", "1.0.0") {
         acceptToken = _acceptToken;
     }
-    
+
     /**
     @dev Setup multisig admin role
      */
@@ -62,7 +56,7 @@ contract DepositContract is Initializable, AccessControlUpgradeable, OwnableUpgr
         unchecked {
             ++_nonce;
         }
-        IERC20Upgradeable(acceptToken).safeTransferFrom(msg.sender, address(this), amount);
+        IERC20(acceptToken).safeTransferFrom(msg.sender, address(this), amount);
         emit DepositedToken(acceptToken, msg.sender, quantity, amount, _nonce);
     }
     
@@ -81,7 +75,7 @@ contract DepositContract is Initializable, AccessControlUpgradeable, OwnableUpgr
     function _verify(bytes32 digest, bytes memory signature)
     internal view returns (bool)
     {
-        return hasRole(DEPOSIT_ROLE, ECDSAUpgradeable.recover(digest, signature));
+        return hasRole(DEPOSIT_ROLE, ECDSA.recover(digest, signature));
     }
 
     /**
@@ -89,7 +83,7 @@ contract DepositContract is Initializable, AccessControlUpgradeable, OwnableUpgr
     * only Admin can execute this function
      */
     function withdrawToken(address receipient, uint256 amount) external onlyRole(ADMIN_ROLE) {
-        IERC20Upgradeable(acceptToken).safeTransfer(receipient, amount);
+        IERC20(acceptToken).safeTransfer(receipient, amount);
         emit WithdrawedToken(acceptToken, receipient, amount);
     }
 }
