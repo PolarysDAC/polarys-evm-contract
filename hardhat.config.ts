@@ -18,13 +18,15 @@ const chainIds = {
 };
 
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY || "";
-const PRIVATE_KEY = process.env.PK || "";
+// const PRIVATE_KEY = process.env.ADMIN_PK || "";
+const PRIVATE_KEY = process.env.USER_PK || "";
 const ETHERSCAN_KEY = process.env.ETHERSCAN_KEY || "";
 
 const config = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
+      chainId: 1337
     },
     rinkeby: {
       url: `https://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_KEY}`,
