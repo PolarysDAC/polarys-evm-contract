@@ -14,13 +14,20 @@ const chainIds = {
   rinkeby: 4,
   ropsten: 3,
   mumbai: 80001,
-  polygon: 137
+  polygon: 137,
+  bsc: 56,
+  bscTestnet: 97,
+  avalanche: 43114,
+  fuji: 43113
 };
 
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY || "";
 // const PRIVATE_KEY = process.env.ADMIN_PK || "";
 const PRIVATE_KEY = process.env.USER_PK || "";
 const ETHERSCAN_KEY = process.env.ETHERSCAN_KEY || "";
+const POLYGONSCAN_KEY = process.env.POLYGONSCAN_KEY || "";
+const BSCSCAN_KEY = process.env.BSCSCAN_KEY || "";
+const AVALANCHE_KEY = process.env.AVALANCHE_KEY || "";
 
 const config = {
   defaultNetwork: "hardhat",
@@ -49,8 +56,18 @@ const config = {
   },
   etherscan: {
     apiKey: {
-      polygonMumbai: ETHERSCAN_KEY,
+      // ethereum
+      mainnet: ETHERSCAN_KEY,
       rinkeby: ETHERSCAN_KEY,
+      // polygon
+      polygon: POLYGONSCAN_KEY,
+      polygonMumbai: POLYGONSCAN_KEY,
+      // binance smart chain
+      bsc: BSCSCAN_KEY,
+      bscTestnet: BSCSCAN_KEY,
+      // avalanche
+      avalanche: AVALANCHE_KEY,
+      avalancheFujiTestnet: AVALANCHE_KEY,
     },
   },
   solidity: {

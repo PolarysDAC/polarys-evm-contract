@@ -19,9 +19,9 @@ async function main () {
   const USER_PK = process.env.USER_PK
   const quantity = 3
   const amount = getBigNumber(661.5, DECIMAL)
-  const deadline = 1658172498
+  const deadline = 1658187166
 
-  const sign = "0x1b819d3d9bbf1b114896158a2fb4122be11c417a151d8b733b8bb06755960ed3398b246309dad21237f737b96eb5a2468cb141b60aaa82da4b7a8fa1b96a422a1c"
+  const sign = "0xc07d68cd199461dd36962aaf71069663ae445bd6cda040d7de8d420c17d7edc942c4c8d0d4f83aa4c11157249543df42f20a37197d2f2306f4b836bcc38536601c"
   const depositContractAddress = (await load('DepositContract')).address
   const testTokenAddress = (await load('TestTokenContract')).address
 

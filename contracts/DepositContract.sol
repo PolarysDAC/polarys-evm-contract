@@ -20,11 +20,11 @@ contract DepositContract is AccessControl, Ownable, EIP712 {
     
     bytes32 constant public DEPOSIT_TYPEHASH = keccak256("DepositToken(address account,uint256 quantity,uint256 amount,uint256 deadline)");
 
-    address public acceptToken;
+    address private _acceptToken;
     uint256 private _nonce;
 
-    constructor(address _acceptToken) EIP712("DepositContract", "1.0.0") {
-        acceptToken = _acceptToken;
+    constructor(address acceptToken) EIP712("DepositContract", "1.0.0") {
+        _acceptToken = acceptToken;
     }
 
     /**
@@ -39,6 +39,17 @@ contract DepositContract is AccessControl, Ownable, EIP712 {
      */
     function setupDepositRole(address account) public onlyOwner {
         _grantRole(DEPOSIT_ROLE, account);
+    }
+
+    /**
+    @dev Setup acceptToken
+     */
+    function setupAcceptToken(address token) public onlyOwner {
+        _acceptToken = token;
+    }
+
+    function getAcceptToken() public view returns (address) {
+        return _acceptToken;
     }
     
     /**
@@ -56,8 +67,8 @@ contract DepositContract is AccessControl, Ownable, EIP712 {
         unchecked {
             ++_nonce;
         }
-        IERC20(acceptToken).safeTransferFrom(msg.sender, address(this), amount);
-        emit DepositedToken(acceptToken, msg.sender, quantity, amount, _nonce);
+        IERC20(_acceptToken).safeTransferFrom(msg.sender, address(this), amount);
+        emit DepositedToken(_acceptToken, msg.sender, quantity, amount, _nonce);
     }
     
     function _hash(address account, uint256 quantity, uint256 amount, uint256 deadline)
@@ -83,7 +94,7 @@ contract DepositContract is AccessControl, Ownable, EIP712 {
     * only Admin can execute this function
      */
     function withdrawToken(address receipient, uint256 amount) external onlyRole(ADMIN_ROLE) {
-        IERC20(acceptToken).safeTransfer(receipient, amount);
-        emit WithdrawedToken(acceptToken, receipient, amount);
+        IERC20(_acceptToken).safeTransfer(receipient, amount);
+        emit WithdrawedToken(_acceptToken, receipient, amount);
     }
 }
