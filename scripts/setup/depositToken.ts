@@ -1,5 +1,6 @@
 import { ethers } from 'hardhat';
 import { formatUnits } from "ethers/lib/utils";
+import { providers } from 'ethers';
 import { TestToken, DepositContract } from "../../typechain-types";
 
 import 'dotenv/config';
@@ -10,6 +11,8 @@ import {
 
 import { Signer } from 'ethers';
 
+const ALCHEMY_KEY = process.env.ALCHEMY_KEY || "";
+
 async function main () {
   let signer: Signer
   let depositContract: DepositContract
@@ -19,26 +22,32 @@ async function main () {
   const USER_PK = process.env.USER_PK
   const quantity = 3
   const amount = getBigNumber(661.5, DECIMAL)
-  const deadline = 1658187166
+  const deadline = 1658275422
 
-  const sign = "0xc07d68cd199461dd36962aaf71069663ae445bd6cda040d7de8d420c17d7edc942c4c8d0d4f83aa4c11157249543df42f20a37197d2f2306f4b836bcc38536601c"
+  const sign = "0xc5bdc14db41e4ae3f2b4d227e86fcc986200967cb72166b6bc30627b1c76fc747fd3091a525e220b5fd3453b41fc89f17d9c72d92085692f76482691a4940a911b"
   const depositContractAddress = (await load('DepositContract')).address
   const testTokenAddress = (await load('TestTokenContract')).address
 
   depositContract = (await ethers.getContractAt("DepositContract", depositContractAddress)) as DepositContract;
   testTokenContract = (await ethers.getContractAt("TestToken", testTokenAddress)) as TestToken;
-  [signer] = await ethers.getSigners()
-  // let userSigner: Signer = new ethers.Wallet(String(USER_PK))
+  // [signer] = await ethers.getSigners()
+  
+  //rinkeby provider
+  const provider = await new providers.JsonRpcProvider("https://eth-rinkeby.alchemyapi.io/v2/nKqhgMRUZJSw0baczgK177tpL59bae_j");
+
+  //mumbai provider
+  // const provider = await new providers.JsonRpcProvider("https://polygon-mumbai.g.alchemy.com/v2/2nMHQF5YQQybtCijNX-tNWi9qo7PObMx");
+  let userSigner: Signer = new ethers.Wallet(String(USER_PK), provider)
   
   await (
     await testTokenContract
-    .connect(signer)
+    .connect(userSigner)
     .approve(depositContract.address, amount)
   ).wait();
 
   await (
     await depositContract
-    .connect(signer)
+    .connect(userSigner)
     .depositToken(quantity, amount, deadline, sign)
   ).wait();
 
