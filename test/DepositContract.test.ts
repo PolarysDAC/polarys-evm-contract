@@ -16,13 +16,13 @@ describe('DepositContract-Test', () => {
   let user1: Signer
   let user2: Signer
   let admin: Signer
-  let receipient: Signer
+  let recipient: Signer
   let testTokenSigner: Signer
   let ownerAddress: string
   let user1Address: string
   let user2Address: string
   let adminAddress: string
-  let receipientAddress: string
+  let recipientAddress: string
   const depositRoleAccount = "0x5065d88Af25A41502dcBa6d70AB3ac140b9AF162"
   const decimal = 6
   before(async () => {
@@ -31,13 +31,13 @@ describe('DepositContract-Test', () => {
       user1, 
       user2,
       admin, 
-      receipient,
+      recipient,
     ] = await ethers.getSigners()
     ownerAddress = await owner.getAddress()
     user1Address = await user1.getAddress()
     user2Address = await user2.getAddress()
     adminAddress = await admin.getAddress()
-    receipientAddress = await receipient.getAddress()
+    recipientAddress = await recipient.getAddress()
     
     console.log('===================Deploying Contract=====================')
 

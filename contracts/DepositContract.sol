@@ -13,7 +13,7 @@ contract DepositContract is AccessControl, Ownable, EIP712 {
     using SafeERC20 for IERC20;
     
     event DepositedToken(address indexed tokenAddress, address indexed sender, uint256 quantity, uint256 amount, uint256 nonce);
-    event WithdrawedToken(address indexed tokenAddress, address indexed receipient, uint256 amount);
+    event WithdrawedToken(address indexed tokenAddress, address indexed recipient, uint256 amount);
     
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant DEPOSIT_ROLE = keccak256("DEPOSIT_ROLE");
@@ -30,26 +30,15 @@ contract DepositContract is AccessControl, Ownable, EIP712 {
     /**
     @dev Setup multisig admin role
      */
-    function setupAdminRole(address admin) public onlyOwner {
+    function setupAdminRole(address admin) external onlyOwner {
         _grantRole(ADMIN_ROLE, admin);
     }
 
     /**
     @dev Setup deposit role
      */
-    function setupDepositRole(address account) public onlyOwner {
+    function setupDepositRole(address account) external onlyOwner {
         _grantRole(DEPOSIT_ROLE, account);
-    }
-
-    /**
-    @dev Setup acceptToken
-     */
-    function setupAcceptToken(address token) public onlyOwner {
-        _acceptToken = token;
-    }
-
-    function getAcceptToken() public view returns (address) {
-        return _acceptToken;
     }
     
     /**
@@ -93,8 +82,8 @@ contract DepositContract is AccessControl, Ownable, EIP712 {
     @dev Withdraw Token
     * only Admin can execute this function
      */
-    function withdrawToken(address receipient, uint256 amount) external onlyRole(ADMIN_ROLE) {
-        IERC20(_acceptToken).safeTransfer(receipient, amount);
-        emit WithdrawedToken(_acceptToken, receipient, amount);
+    function withdrawToken(address recipient, uint256 amount) external onlyRole(ADMIN_ROLE) {
+        IERC20(_acceptToken).safeTransfer(recipient, amount);
+        emit WithdrawedToken(_acceptToken, recipient, amount);
     }
 }
