@@ -79,7 +79,7 @@ contract DepositContract is AccessControl, EIP712 {
             quantity,
             amount,
             deadline,
-            _nonce
+            nonce
         )));
     }
 
