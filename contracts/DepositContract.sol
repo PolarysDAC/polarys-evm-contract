@@ -21,6 +21,7 @@ contract DepositContract is AccessControl, EIP712 {
     bytes32 constant public DEPOSIT_TYPEHASH = keccak256("DepositToken(address account,uint256 quantity,uint256 amount,uint256 deadline,uint256 nonce)");
 
     address private _acceptToken;
+
     uint256 private _nonce;
 
     constructor(address acceptToken) EIP712("DepositContract", "1.0.0") {
@@ -42,6 +43,13 @@ contract DepositContract is AccessControl, EIP712 {
         _grantRole(DEPOSIT_ROLE, account);
     }
     
+    /**
+     * @dev Return nonce
+     */
+    function getNonce() external view returns(uint256) {
+        return _nonce;
+    }
+
     /**
     @dev Deposit Token
     @param quantity NFT items quantity
@@ -71,7 +79,7 @@ contract DepositContract is AccessControl, EIP712 {
             quantity,
             amount,
             deadline,
-            nonce
+            _nonce
         )));
     }
 
