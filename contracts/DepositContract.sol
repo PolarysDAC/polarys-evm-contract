@@ -20,8 +20,9 @@ contract DepositContract is AccessControl, EIP712 {
     
     bytes32 constant public DEPOSIT_TYPEHASH = keccak256("DepositToken(address account,uint256 quantity,uint256 amount,uint256 deadline,uint256 nonce)");
 
-    address private _acceptToken;
+    address private immutable _acceptToken;
 
+    mapping(address => uint256) _accountNonces;
     uint256 private _nonce;
 
     constructor(address acceptToken) EIP712("DepositContract", "1.0.0") {
@@ -46,8 +47,8 @@ contract DepositContract is AccessControl, EIP712 {
     /**
      * @dev Return nonce
      */
-    function getNonce() external view returns(uint256) {
-        return _nonce;
+    function getAccountNonce(address account) external view returns(uint256) {
+        return _accountNonces[account];
     }
 
     /**
@@ -59,15 +60,17 @@ contract DepositContract is AccessControl, EIP712 {
     * Contract can not execute this function
     */
     function depositToken(uint256 quantity, uint256 amount, uint256 deadline, bytes calldata signature) external {
-        require(msg.sender == tx.origin, "Contract address is not allowed");
+        require(_msgSender() == tx.origin, "Contract address is not allowed");
         require(block.timestamp <= deadline, "Invalid expiration in deposit");
-        uint256 currentValidNonce = _nonce;
-        require(_verify(_hash(msg.sender, quantity, amount, deadline, currentValidNonce), signature), "Invalid signature");
+        require(quantity <= 10, "Can not mint NFTs more than 10 NFTs");
+        uint256 currentValidNonce = _accountNonces[_msgSender()];
+        require(_verify(_hash(_msgSender(), quantity, amount, deadline, currentValidNonce), signature), "Invalid signature");
         unchecked {
-            ++_nonce;
+            ++_accountNonces[_msgSender()];
+            ++ _nonce;
         }
-        IERC20(_acceptToken).safeTransferFrom(msg.sender, address(this), amount);
-        emit DepositedToken(_acceptToken, msg.sender, quantity, amount, currentValidNonce);
+        IERC20(_acceptToken).safeTransferFrom(_msgSender(), address(this), amount);
+        emit DepositedToken(_acceptToken, _msgSender(), quantity, amount, _nonce);
     }
     
     function _hash(address account, uint256 quantity, uint256 amount, uint256 deadline, uint256 nonce)

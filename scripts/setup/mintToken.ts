@@ -16,7 +16,7 @@ async function main () {
   let testTokenContract: TestToken
 
   const DECIMAL = 6
-  const DEST_ADDRESS = "0xfd779b9b1176EF1EB69a8fAD435014dbC55edB3f"
+  const DEST_ADDRESS = "0xf90a80A353E6e3E504993ca1814d7E21Ff5267e0"
   const depositContractAddress = (await load('DepositContract')).address
   const testTokenAddress = (await load('TestTokenContract')).address
 
