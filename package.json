@@ -38,6 +38,7 @@
     "@openzeppelin/hardhat-upgrades": "^1.19.0",
     "ethers": "^5.5.4",
     "fs-extra": "^10.0.0",
+    "merkletreejs": "^0.2.32",
     "node-fetch": "^2.6.1",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.9",
