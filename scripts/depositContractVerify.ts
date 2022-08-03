@@ -7,12 +7,14 @@ dotenv.config();
 
 async function main() {
     const tokenAddress = process.env.DEPOSIT_TOKEN_ADDRESS || "0xFE724a829fdF12F7012365dB98730EEe33742ea2";
+    const merkleRoot = process.env.MERKLE_ROOT!
     const contractAddress = (await load('DepositContract')).address
     console.log(contractAddress)
     await hre.run("verify:verify", {
         address: contractAddress,
         constructorArguments: [
-            tokenAddress
+            tokenAddress,
+            merkleRoot
         ],
     });
 }
