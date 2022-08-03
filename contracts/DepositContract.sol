@@ -87,7 +87,7 @@ contract DepositContract is AccessControl, EIP712 {
         if (status == 1) {
             if (merkleProof.length > 0) {
                 // Verify the merkle proof.
-                require(MerkleProof.verify(merkleProof, merkleRoot, toBytes32(msg.sender)), 'MerkleDistributor: Invalid proof.');
+                require(MerkleProof.verify(merkleProof, merkleRoot, toBytes32(_msgSender())), 'MerkleDistributor: Invalid proof.');
             } else {
                 revert InvalidPrivateSaleAddress(_msgSender());
             }
