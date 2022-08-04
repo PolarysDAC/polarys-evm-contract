@@ -27,7 +27,7 @@ contract DepositContract is AccessControl, EIP712 {
 
     bytes32 public immutable merkleRoot;
 
-    mapping(address => uint256) _accountNonces;
+    mapping(address => uint256) private _accountNonces;
     uint256 private _nonce;
 
     constructor(address acceptToken, bytes32 merkleRoot_) EIP712("DepositContract", "1.0.0") {
@@ -87,7 +87,7 @@ contract DepositContract is AccessControl, EIP712 {
         if (status == 1) {
             if (merkleProof.length > 0) {
                 // Verify the merkle proof.
-                require(MerkleProof.verify(merkleProof, merkleRoot, toBytes32(_msgSender())), 'MerkleDistributor: Invalid proof.');
+                require(MerkleProof.verify(merkleProof, merkleRoot, keccak256(abi.encodePacked(_msgSender()))), 'MerkleDistributor: Invalid proof.');
             } else {
                 revert InvalidPrivateSaleAddress(_msgSender());
             }

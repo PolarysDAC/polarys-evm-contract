@@ -20,11 +20,13 @@ async function main () {
 
   const DECIMAL = 6
   const USER_PK = process.env.USER_PK
-  const quantity = 3
-  const amount = getBigNumber(661.5, DECIMAL)
-  const deadline = 1658879424
+  const quantity = 1
+  const amount = getBigNumber(250, DECIMAL)
+  const deadline = 1659558650
+  const proof = ['0x102e237c0c12aa11b575b407a65408c9c30e88c4ba404f7d6bfb39c21bcd5b5a']
+  const sign = "0xed32447fad25f7bdc3c1e40a23b7741f3b97814797c5d294c463452490511dc11cfe70e8f93a89397649a5e12ed4ba1459c448561a841c857da95d00d8c560cd1b"
+  const saleStatus = 1
 
-  const sign = "0x4755611c81e7d95232d626ec79f56040d7f8a1dfe9dc702d50a1d63c9fdc70fa79d86488025ebe7b3d8153f6f3da2915176efddc349e2529cad9c73facda47dd1c"
   const depositContractAddress = (await load('DepositContract')).address
   const testTokenAddress = (await load('TestTokenContract')).address
 
@@ -45,11 +47,18 @@ async function main () {
     .approve(depositContract.address, amount)
   ).wait();
 
-  await (
-    await depositContract
+  const tx = await depositContract
     .connect(userSigner)
-    .depositToken(quantity, amount, deadline, sign)
-  ).wait();
+    .depositToken(
+      quantity, 
+      amount, 
+      deadline, 
+      saleStatus,
+      sign,
+      proof
+    )
+  await tx.wait();
+  console.log(tx)
 
 }
 
