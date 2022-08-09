@@ -5,7 +5,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-    const tokenAddress = process.env.DEPOSIT_TOKEN_ADDRESS || "0xFE724a829fdF12F7012365dB98730EEe33742ea2";
+    const tokenAddress = process.env.DEPOSIT_TOKEN_ADDRESS!;
     const merkleRoot = process.env.MERKLE_ROOT!
     const factory = await ethers.getContractFactory("DepositContract");
     const depositContract = await factory.deploy(tokenAddress, merkleRoot);

@@ -5,7 +5,6 @@ pragma solidity 0.8.15;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
@@ -57,9 +56,6 @@ contract DepositContract is AccessControl, EIP712 {
         return _accountNonces[account];
     }
 
-    function toBytes32(address addr) pure internal returns (bytes32) {
-        return bytes32(uint256(uint160(addr)));
-    }
     /**
     @dev Deposit Token
     @param quantity NFT items quantity

@@ -2,9 +2,8 @@
 pragma solidity 0.8.15;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract TestToken is ERC20, Ownable {
+contract TestToken is ERC20 {
     event MintedToken(address indexed to, uint256 amount);
 
     uint8 public _decimals;
@@ -25,7 +24,7 @@ contract TestToken is ERC20, Ownable {
         _decimals = _ddecimals;
     }
 
-    function mint(address _to, uint256 _amount) public onlyOwner {
+    function mint(address _to, uint256 _amount) public {
         require(_amount > 0, "amount is 0");
         _mint(_to, _amount);
         

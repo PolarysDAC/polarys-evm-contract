@@ -8,6 +8,7 @@ import { load } from "../utils"
 import { Signer } from 'ethers';
 
 const DEPOSIT_ROLE_ACCOUNT = process.env.DEPOSIT_ROLE_ACCOUNT
+const ADMIN_ROLE_ACCOUNT = process.env.ADMIN_ROLE_ACCOUNT
 
 async function main () {
   let signer: Signer
@@ -22,6 +23,12 @@ async function main () {
     await depositContract
     .connect(signer)
     .setupDepositRole(String(DEPOSIT_ROLE_ACCOUNT))
+  ).wait();
+
+  await (
+    await depositContract
+    .connect(signer)
+    .setupAdminRole(String(ADMIN_ROLE_ACCOUNT))
   ).wait();
 
 }
