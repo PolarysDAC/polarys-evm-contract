@@ -23,8 +23,7 @@ const chainIds = {
 
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY || "";
 
-const PRIVATE_KEY = process.env.ADMIN_PK || "";
-// const PRIVATE_KEY = process.env.USER_PK || "";
+const PRIVATE_KEY = process.env.PK || "";
 
 const ETHERSCAN_KEY = process.env.ETHERSCAN_KEY || "";
 const POLYGONSCAN_KEY = process.env.POLYGONSCAN_KEY || "";
